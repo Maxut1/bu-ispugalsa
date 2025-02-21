@@ -35,7 +35,7 @@ public class GeneratorLogic : MonoBehaviour
 
     private void EscapeSuccessful()
     {
-        Debug.Log("Побег совершен! Игрок выиграл!");
+        Debug.Log("Дверь открыта");
 
         // Двигаем объекты дверей для открытия
         GameObject exit1 = GameObject.FindWithTag("Exit1");
@@ -43,12 +43,12 @@ public class GeneratorLogic : MonoBehaviour
 
         if (exit1 != null)
         {
-            exit1.transform.position += new Vector3(0, 0, -1.5f);
+            exit1.transform.position += new Vector3(0, 0, -1f);
         }
 
         if (exit2 != null)
         {
-            exit2.transform.position += new Vector3(0, 0, 1.5f);
+            exit2.transform.position += new Vector3(0, 0, 1f);
         }
     }
 }

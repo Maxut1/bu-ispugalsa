@@ -16,9 +16,6 @@ public class PlayerPickup : MonoBehaviour
     {
         CheckForBattery();
 
-        // Логгируем состояние isHolding перед проверкой
-        Debug.Log("isHolding перед проверкой: " + isHolding);
-
         // Если игрок держит батарейку, отслеживаем зажатие для броска
         if (isHolding && Input.GetMouseButton(0))
         {
@@ -33,7 +30,6 @@ public class PlayerPickup : MonoBehaviour
         // Если игрок не держит батарейку, проверяем клик на подъем
         if (!isHolding && Input.GetMouseButtonDown(0) && currentBattery != null)
         {
-            Debug.Log("Пытаемся поднять батарейку");
             PickUpBattery();
         }
 
@@ -64,25 +60,17 @@ public class PlayerPickup : MonoBehaviour
 
         // Если батарейки перед прицелом нет — сбрасываем
         currentBattery = null;
-        crosshair.color = Color.red;
+        crosshair.color = Color.white;
     }
 
     void PickUpBattery()
     {
-        if (isHolding) // Если батарейка уже в руке
-        {
-            Debug.Log("Батарейка уже в руке.");
-            return;
-        }
-
         if (currentBattery != null)
         {
-            Debug.Log("Поднята батарейка: " + currentBattery.name); // Выводим информацию о батарейке
             heldBattery = currentBattery;
             heldBattery.PickUp(hand);
             isHolding = true;
             currentBattery = null; // Чтобы нельзя было взять другую
-            Debug.Log("isHolding после поднятия: " + isHolding); // Логгируем после поднятия
         }
     }
 
@@ -94,7 +82,6 @@ public class PlayerPickup : MonoBehaviour
             heldBattery.Drop(throwForce);
             isHolding = false;
             heldBattery = null;
-            Debug.Log("isHolding после выброса: " + isHolding); // Логгируем после выброса
         }
     }
 }

@@ -20226,7 +20226,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 15, y: 15}
+  m_SizeDelta: {x: 3, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1109916812
 MonoBehaviour:
@@ -20241,7 +20241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.018630978, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -21417,6 +21417,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   lookSpeed: 2
+  bobbingSpeed: 10
+  bobbingAmount: 0.07
+  swayAmount: 0.05
 --- !u!143 &1188896459
 CharacterController:
   m_ObjectHideFlags: 0
@@ -21857,10 +21860,10 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 190
+  Priority: 120
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 5
+  MaxDistance: 6.7169514
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
