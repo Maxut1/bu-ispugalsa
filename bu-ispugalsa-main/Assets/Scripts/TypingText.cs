@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class TypingText : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class TypingText : MonoBehaviour
             {
                 currentSentenceIndex++;
                 StartCoroutine(DisplayText());
+            }
+            else
+            {
+                SceneManager.LoadScene("SampleScene");
             }
         }
     }
