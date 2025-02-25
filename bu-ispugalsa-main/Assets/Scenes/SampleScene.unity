@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00097106333, g: 0.0020047002, b: 0.004356997, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -21401,7 +21401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: effb180a4b03e6e4b92d48c5e416a273, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 963194227}
   monster: {fileID: 1908671733}
   killer: {fileID: 1521406041}
   deathCameraTurnSpeed: 2
@@ -21968,8 +21967,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClips:
   - {fileID: 8300000, guid: e031a2074fc57e147b5c4e516f54a129, type: 3}
-  - {fileID: 8300000, guid: 4104495a448805b4e94dc83af000e0f6, type: 3}
-  - {fileID: 8300000, guid: 57cb71e2ff6773d4a970f143464292c7, type: 3}
+  - {fileID: 8300000, guid: e07acf4be273f6d4d884b12942c8e800, type: 3}
+  - {fileID: 8300000, guid: 587e6727b10650440bc4f6b82849c5fe, type: 3}
   - {fileID: 8300000, guid: 862e32085adc29949a12fee9d1ff11a0, type: 3}
   audioSource: {fileID: 1233701381}
 --- !u!1001 &1235421655
@@ -26071,7 +26070,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 08b4ba6cd22a9ab4986a13fff034f354, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e031a2074fc57e147b5c4e516f54a129, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1.48
