@@ -12,10 +12,10 @@ public class PlayerDeath : MonoBehaviour
 
     public void Die()
     {
-        isDead = true;
         if (isDead) return;
 
+        isDead = true;
         Debug.Log("Игрок погиб!");
-        SceneManager.LoadScene("finish");
+        SceneManager.LoadScene("GameOver");
     }
 }

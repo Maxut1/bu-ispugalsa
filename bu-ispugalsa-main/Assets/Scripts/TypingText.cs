@@ -12,6 +12,7 @@ public class TypingText : MonoBehaviour
     public AudioClip[] wordSounds;   // Массив звуков для слов
     private int currentSentenceIndex = 0; // Индекс текущего предложения
     private AudioSource audioSource; // Источник звука
+    public string Scene; // Сцена на которую следует перемещаться после текста
 
     void Start()
     {
@@ -32,7 +33,7 @@ public class TypingText : MonoBehaviour
             }
             else
             {
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene(Scene);
             }
         }
     }

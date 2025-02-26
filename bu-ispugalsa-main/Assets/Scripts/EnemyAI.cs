@@ -13,7 +13,6 @@ public class EnemyAI : MonoBehaviour
     public Animator killerAnimator;      // Аниматор модели, которая бьёт
 
     private bool isAttacking = false;
-    private bool isDead = false;
 
     private void Start()
     {
@@ -58,8 +57,14 @@ public class EnemyAI : MonoBehaviour
         // Перемещаем KillerModel на позицию BooWalking
         killerModel.transform.SetPositionAndRotation(normalModel.transform.position, normalModel.transform.rotation);
 
-        // Включаем модель убийства и отключаем ходьбу
-        normalModel.SetActive(false);
+        // Вместо отключения делаем нормальную модель невидимой
+        Renderer normalRenderer = normalModel.GetComponentInChildren<Renderer>();
+        if (normalRenderer != null)
+        {
+            normalRenderer.enabled = false;
+        }
+
+        // Включаем модель убийства
         killerModel.SetActive(true);
 
         // Поворачиваем монстра к игроку
@@ -72,17 +77,16 @@ public class EnemyAI : MonoBehaviour
         Camera.main.transform.localPosition = new Vector3(34.4f, 21.3f, 392.2003f); // Координаты камеры
         Camera.main.transform.localRotation = Quaternion.Euler(-38.705f, -182.277f, 3.839f);
 
-        // Отключаем игрока
+        // Вместо отключения делаем игрока невидимым
         player.gameObject.SetActive(false);
 
         // Проигрываем анимацию удара
         killerAnimator.SetTrigger("Attack");
 
-        // Ждем завершения анимации удара
-        yield return new WaitForSeconds(killerAnimator.GetCurrentAnimatorStateInfo(0).length);
+        Debug.Log("Таймер запущен!");
+        yield return new WaitForSeconds(4f);
 
-        // После завершения анимации вызовем метод Die() и перейдем на сцену "finish"
+        // Переходим на сцену "finish"
         playerDeath.Die();
     }
-
 }
