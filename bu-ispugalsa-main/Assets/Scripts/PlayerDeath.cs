@@ -15,7 +15,6 @@ public class PlayerDeath : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
-        Debug.Log("Игрок погиб!");
         SceneManager.LoadScene("GameOver");
     }
 }

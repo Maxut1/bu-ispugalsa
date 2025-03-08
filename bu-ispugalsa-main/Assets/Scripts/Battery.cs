@@ -4,7 +4,7 @@ public class Battery : MonoBehaviour
 {
     private Rigidbody rb;
     private Collider col;
-    private bool isPickedUp = false; // Флаг, показывающий, что батарейка в руке
+    private bool isPickedUp = false; // пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 
     void Start()
     {
@@ -14,7 +14,7 @@ public class Battery : MonoBehaviour
 
     public void PickUp(Transform hand)
     {
-        // Если батарейка уже в руке, не выполняем действие
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (isPickedUp) return;
 
         rb.isKinematic = true;
@@ -22,19 +22,18 @@ public class Battery : MonoBehaviour
         transform.SetParent(hand);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-        isPickedUp = true; // Устанавливаем флаг, что батарейка в руке
-        Debug.Log("Батарейка в руке");
+        isPickedUp = true; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
     }
 
     public void Drop(Vector3 force)
     {
-        if (!isPickedUp) return; // Если батарейка не в руке, то ничего не делаем
+        if (!isPickedUp) return; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
         transform.SetParent(null);
         rb.isKinematic = false;
         col.enabled = true;
         rb.AddForce(force, ForceMode.Impulse);
-        isPickedUp = false; // Сбрасываем флаг, батарейка выброшена
-        Debug.Log("Батарейка выбросилась");
+        isPickedUp = false; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
 }
+
