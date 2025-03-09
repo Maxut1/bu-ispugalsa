@@ -7,17 +7,24 @@ public class EnemyAI : MonoBehaviour
 {
     public Transform player;
     public NavMeshAgent agent;
-    public Animator walkAnimator;        // Аниматор модели, которая ходит
-    public GameObject normalModel;       // Модель, которая ходит
-    public GameObject killerModel;       // Модель, которая бьёт
-    public Animator killerAnimator;      // Аниматор модели, которая бьёт
+    public Animator walkAnimator;    
+    public GameObject normalModel;      
+    public GameObject killerModel;      
+    public Animator killerAnimator;     
+    public Transform[] patrolPoints; // РўРѕС‡РєРё РїР°С‚СЂСѓР»РёСЂРѕРІР°РЅРёСЏ
+    public float viewDistance = 10f; // Р”Р°Р»СЊРЅРѕСЃС‚СЊ Р·СЂРµРЅРёСЏ
+    public float chaseTime = 10f; // Р’СЂРµРјСЏ РїСЂРµСЃР»РµРґРѕРІР°РЅРёСЏ РїРѕСЃР»Рµ РїРѕС‚РµСЂРё РёРіСЂРѕРєР°
 
     private bool isAttacking = false;
+    private bool isChasing = false;
+    private int currentPatrolIndex = 0;
+    private float chaseTimer = 0f;
 
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-
+        
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРєРѕСЂРѕСЃС‚СЊ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃР»РѕР¶РЅРѕСЃС‚Рё
         switch (DifficultyManager.Difficulty)
         {
             case 0: // Easy
@@ -30,14 +37,54 @@ public class EnemyAI : MonoBehaviour
                 agent.speed = 5f;
                 break;
         }
+
+        // Р—Р°РїСѓСЃРєР°РµРј РїР°С‚СЂСѓР»РёСЂРѕРІР°РЅРёРµ
+        PatrolToNextPoint();
     }
 
     private void Update()
     {
-        if (player != null && !isAttacking)
+        if (isAttacking) return; // Р•СЃР»Рё Р°С‚Р°РєСѓРµС‚, РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
+
+        if (CanSeePlayer())
         {
+            // Р•СЃР»Рё РјРѕРЅСЃС‚СЂ РІРёРґРёС‚ РёРіСЂРѕРєР°, РЅР°С‡РёРЅР°РµС‚ РїСЂРµСЃР»РµРґРѕРІР°С‚СЊ
+            isChasing = true;
+            chaseTimer = chaseTime; // РћР±РЅРѕРІР»СЏРµРј С‚Р°Р№РјРµСЂ РїРѕРіРѕРЅРё
             agent.SetDestination(player.position);
         }
+        else if (isChasing)
+        {
+            // Р•СЃР»Рё РїСЂРµСЃР»РµРґСѓРµС‚, РЅРѕ РёРіСЂРѕРєР° РЅРµ РІРёРґРЅРѕ - СѓР±С‹РІР°РµС‚ С‚Р°Р№РјРµСЂ
+            chaseTimer -= Time.deltaTime;
+
+            if (chaseTimer <= 0)
+            {
+                isChasing = false; // РџСЂРµРєСЂР°С‰Р°РµРј РїРѕРіРѕРЅСЋ
+                PatrolToNextPoint();
+            }
+        }
+        else if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            // Р•СЃР»Рё РЅРµ РІРёРґРёС‚ РёРіСЂРѕРєР° Рё РґРѕС€РµР» РґРѕ С‚РѕС‡РєРё - РїРµСЂРµС…РѕРґРёС‚ Рє СЃР»РµРґСѓСЋС‰РµР№
+            PatrolToNextPoint();
+        }
+    }
+
+    private bool CanSeePlayer()
+    {
+        if (player == null) return false;
+
+        float distance = Vector3.Distance(transform.position, player.position);
+        return distance <= viewDistance;
+    }
+
+    private void PatrolToNextPoint()
+    {
+        if (patrolPoints.Length == 0) return;
+
+        agent.SetDestination(patrolPoints[currentPatrolIndex].position);
+        currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length; // РџРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµР№ С‚РѕС‡РєРµ
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,42 +98,36 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator AttackPlayer(PlayerDeath playerDeath)
     {
         isAttacking = true;
+        isChasing = false;
         agent.isStopped = true;
         walkAnimator.enabled = false;
 
-        // Перемещаем KillerModel на позицию BooWalking
+        // РџРµСЂРµРєР»СЋС‡Р°РµРј РјРѕРґРµР»СЊ РЅР° СѓР±РёР№С†Сѓ
         killerModel.transform.SetPositionAndRotation(normalModel.transform.position, normalModel.transform.rotation);
-
-        // Вместо отключения делаем нормальную модель невидимой
         Renderer normalRenderer = normalModel.GetComponentInChildren<Renderer>();
-        if (normalRenderer != null)
-        {
-            normalRenderer.enabled = false;
-        }
-
-        // Включаем модель убийства
+        if (normalRenderer != null) normalRenderer.enabled = false;
         killerModel.SetActive(true);
 
-        // Поворачиваем монстра к игроку
+        // Р Р°Р·РІРѕСЂР°С‡РёРІР°РµРјСЃСЏ Рє РёРіСЂРѕРєСѓ
         Vector3 lookPos = player.position - transform.position;
         lookPos.y = 0;
         transform.rotation = Quaternion.LookRotation(lookPos);
 
-        // Привязываем камеру к KillerModel
+        // РљР°РјРµСЂР° РїРµСЂРµС…РѕРґРёС‚ Рє СѓР±РёР№С†Рµ
         Camera.main.transform.SetParent(killerModel.transform);
-        Camera.main.transform.localPosition = new Vector3(34.4f, 21.3f, 392.2003f); // Координаты камеры
+        Camera.main.transform.localPosition = new Vector3(34.4f, 21.3f, 392.2003f);
         Camera.main.transform.localRotation = Quaternion.Euler(-38.705f, -182.277f, 3.839f);
 
-        // Вместо отключения делаем игрока невидимым
+        // Р’С‹РєР»СЋС‡Р°РµРј РёРіСЂРѕРєР°
         player.gameObject.SetActive(false);
 
-        // Проигрываем анимацию удара
+        // Р—Р°РїСѓСЃРє Р°РЅРёРјР°С†РёРё Р°С‚Р°РєРё
         killerAnimator.SetTrigger("Attack");
 
-        Debug.Log("Таймер запущен!");
+        Debug.Log("РРіСЂРѕРє СѓР±РёС‚!");
         yield return new WaitForSeconds(4f);
 
-        // Переходим на сцену "finish"
+        // РџРµСЂРµРЅР°РїСЂР°РІР»РµРЅРёРµ РЅР° СЃС†РµРЅСѓ "finish"
         playerDeath.Die();
     }
 }
