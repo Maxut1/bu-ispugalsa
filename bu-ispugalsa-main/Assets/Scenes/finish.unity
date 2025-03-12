@@ -522,7 +522,7 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1001 &1085119378
+--- !u!1001 &1676587958
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -906,4 +906,4 @@ SceneRoots:
   - {fileID: 875921573}
   - {fileID: 588466936}
   - {fileID: 1867452383}
-  - {fileID: 1085119378}
+  - {fileID: 1676587958}

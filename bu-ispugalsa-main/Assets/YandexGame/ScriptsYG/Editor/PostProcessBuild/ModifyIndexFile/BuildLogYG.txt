@@ -1,0 +1,2 @@
+Build path: /Users/maksim/Documents/WALLKING
+Build number: 4
