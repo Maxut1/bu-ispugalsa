@@ -199,6 +199,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2211564899198745196, guid: caf9732433f4dc044845763962493607, type: 3}
+      propertyPath: infoYG
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c522df7b48284bbfac7bd51635739c6, type: 2}
     - target: {fileID: 2211564899198745197, guid: caf9732433f4dc044845763962493607, type: 3}
       propertyPath: m_Name
       value: YandexGame
@@ -484,6 +488,9 @@ MonoBehaviour:
   wordSounds:
   - {fileID: 0}
   Scene: SampleScene
+  winPanel: {fileID: 0}
+  restartButton: {fileID: 0}
+  menuButton: {fileID: 0}
 --- !u!4 &631725123
 Transform:
   m_ObjectHideFlags: 0
