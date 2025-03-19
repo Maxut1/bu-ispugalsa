@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
+using UnityEngine.SceneManagement; // ✅ Добавлено!
 using UnityEngine.UI;
 using YG; // Подключаем Yandex SDK
+
 
 public class TypingText : MonoBehaviour
 {
@@ -40,15 +41,6 @@ public class TypingText : MonoBehaviour
             restartButton.onClick.AddListener(() => ShowAdBeforeAction(RestartGame));
             menuButton.onClick.AddListener(() => ShowAdBeforeAction(GoToMenu));
         }
-
-        // Подписываемся на событие завершения рекламы
-        YandexGame.RewardVideoEvent += OnAdFinished;
-    }
-
-    void OnDestroy()
-    {
-        // Отписываемся от события при уничтожении объекта
-        YandexGame.RewardVideoEvent -= OnAdFinished;
     }
 
     void Update()
@@ -115,8 +107,9 @@ public class TypingText : MonoBehaviour
     {
         if (YandexGame.SDKEnabled)
         {
-            pendingAction = action; // Запоминаем, какое действие выполнить после рекламы
-            YandexGame.RewVideoShow(1); // Показываем рекламу
+            pendingAction = action; // Запоминаем действие, которое нужно выполнить после рекламы
+            YandexGame.FullscreenShow(); // Показываем обычную полноэкранную рекламу
+            Invoke(nameof(ExecutePendingAction), 1.5f); // Запускаем действие после рекламы с задержкой
         }
         else
         {
@@ -124,12 +117,9 @@ public class TypingText : MonoBehaviour
         }
     }
 
-    void OnAdFinished(int adStatus)
+    void ExecutePendingAction()
     {
-        if (adStatus == 1) // Проверяем, была ли реклама просмотрена
-        {
-            pendingAction?.Invoke(); // Выполняем отложенное действие после рекламы
-        }
+        pendingAction?.Invoke(); // Выполняем отложенное действие
         pendingAction = null; // Очищаем переменную
     }
 

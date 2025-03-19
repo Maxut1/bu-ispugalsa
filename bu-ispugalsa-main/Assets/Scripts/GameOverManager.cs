@@ -1,80 +1,85 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using YG; // Подключаем Yandex SDK
 
 public class GameOverManager : MonoBehaviour
 {
-    public GameObject gameOverPanel; // Панель поражения
+    public GameObject gameOverCanvas;
+    public Button restartButton;
+    public Button menuButton;
+    public Image screenFlash;
+    public AudioSource gameMusic;
+    public AudioSource flashSound;
+    public Animator flashAnimator;
 
-    private System.Action pendingAction; // Храним действие, которое нужно выполнить после рекламы
+    private bool isGameOver = false;
 
     void Start()
     {
-        // Подписываемся на событие завершения рекламы
-        YandexGame.RewardVideoEvent += OnAdFinished;
+        if (gameOverCanvas == null)
+        {
+            Debug.LogError("GameOverCanvas не назначен в Inspector!");
+        }
+        else
+        {
+            gameOverCanvas.SetActive(false);
+        }
+
+        if (restartButton != null) restartButton.onClick.AddListener(RestartGame);
+        if (menuButton != null) menuButton.onClick.AddListener(GoToMenu);
     }
 
-    void OnDestroy()
+    public void PlayerDied()
     {
-        // Отписываемся от события при уничтожении объекта
-        YandexGame.RewardVideoEvent -= OnAdFinished;
-    }
+        if (isGameOver) return;
+        isGameOver = true;
 
-    public void ShowGameOverScreen()
-    {
-        Invoke("ActivateGameOverPanel", 2f); // Показываем панель через 2 секунды
-    }
+        StopAllEffects();
+        gameOverCanvas.SetActive(true);
 
-    void ActivateGameOverPanel()
-    {
-        gameOverPanel.SetActive(true);
+        if (restartButton != null) restartButton.interactable = true;
+        if (menuButton != null) menuButton.interactable = true;
 
-        // Включаем курсор и делаем его видимым
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
 
-    // Метод для показа рекламы перед перезапуском
-    public void RestartGame()
+    void StopAllEffects()
     {
-        ShowAdBeforeAction(() =>
+        if (screenFlash != null)
         {
-            // После рекламы перезапускаем игру
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        });
-    }
-
-    // Метод для показа рекламы перед переходом в меню
-    public void GoToMenu()
-    {
-        ShowAdBeforeAction(() =>
-        {
-            // После рекламы переходим в меню
-            SceneManager.LoadScene(0); // Заменить на сцену главного меню
-        });
-    }
-
-    // Метод для показа рекламы перед выполнением действия
-    void ShowAdBeforeAction(System.Action action)
-    {
-        if (YandexGame.SDKEnabled)
-        {
-            pendingAction = action; // Запоминаем действие
-            YandexGame.RewVideoShow(1); // Показываем рекламу
+            screenFlash.color = new Color(0, 0, 0, 0);
         }
-        else
+
+        if (gameMusic != null && gameMusic.isPlaying)
         {
-            action?.Invoke(); // Если SDK не доступна, сразу выполняем действие
+            gameMusic.Stop();
+        }
+
+        if (flashSound != null && flashSound.isPlaying)
+        {
+            flashSound.Stop();
+        }
+
+        if (flashAnimator != null)
+        {
+            flashAnimator.enabled = false;
+        }
+
+        GeneratorLogic generator = FindObjectOfType<GeneratorLogic>();
+        if (generator != null)
+        {
+            generator.StopFlashing();
         }
     }
 
-    // Колбек для завершения рекламы
-    void OnAdFinished(int adStatus)
+    void RestartGame()
     {
-        if (adStatus == 1) // Реклама была просмотрена
-        {
-            pendingAction?.Invoke(); // Выполняем отложенное действие после рекламы
-        }
-        pendingAction = null; // Очищаем переменную после выполнения действия
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void GoToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }

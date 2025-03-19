@@ -15539,7 +15539,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84192c1e65270432594efc75d4806b83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverPanel: {fileID: 237878398}
+  gameOverCanvas: {fileID: 237878398}
+  restartButton: {fileID: 1515061315}
+  menuButton: {fileID: 1236436797}
+  screenFlash: {fileID: 1416693027}
+  gameMusic: {fileID: 0}
+  flashSound: {fileID: 0}
+  flashAnimator: {fileID: 0}
 --- !u!1 &802417944 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c1dc1e311d1440246b5f1c097ee6383b, type: 3}

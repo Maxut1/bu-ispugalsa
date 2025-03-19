@@ -15,7 +15,7 @@ public class PlayerDeath : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
-        FindObjectOfType<GameOverManager>().ShowGameOverScreen();
+        FindObjectOfType<GameOverManager>().PlayerDied();
         // SceneManager.LoadScene("GameOver");
     }
 }

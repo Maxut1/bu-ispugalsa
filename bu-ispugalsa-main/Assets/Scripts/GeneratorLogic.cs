@@ -5,28 +5,31 @@ using System.Collections;
 
 public class GeneratorLogic : MonoBehaviour
 {
-    public int totalBatteries = 5; // Общее количество батарей
+    public int totalBatteries = 5;
     private int batteriesInserted = 0;
     public TextMeshProUGUI batteryCounterText;
-    public Image flashImage; // UI-элемент для мерцания
-    public float flashSpeed = 0.1f; // Скорость мерцания
+    public Image flashImage;
+    public float flashSpeed = 0.1f;
 
-    public AudioSource backgroundMusic; // Фоновая музыка
-    public AudioClip newMusic; // Музыка, которая включится при сборе всех батареек
+    public AudioSource backgroundMusic;
+    public AudioClip newMusic;
 
-    private bool isFlashing = false; // Флаг для управления мерцанием
+    private bool isFlashing = false;
 
     private void Start()
     {
         UpdateBatteryCounter();
-        flashImage.gameObject.SetActive(false); // Отключаем мерцание в начале
+        if (flashImage != null)
+        {
+            flashImage.gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Battery"))
         {
-            Destroy(other.gameObject); // Удаление батарейки
+            Destroy(other.gameObject);
             batteriesInserted++;
             UpdateBatteryCounter();
 
@@ -39,7 +42,10 @@ public class GeneratorLogic : MonoBehaviour
 
     private void UpdateBatteryCounter()
     {
-        batteryCounterText.text = $"{batteriesInserted}/{totalBatteries}";
+        if (batteryCounterText != null)
+        {
+            batteryCounterText.text = $"{batteriesInserted}/{totalBatteries}";
+        }
     }
 
     private void EscapeSuccessful()
@@ -51,15 +57,18 @@ public class GeneratorLogic : MonoBehaviour
             StartCoroutine(FlashScreen());
         }
 
-        // Меняем музыку
         if (backgroundMusic != null && newMusic != null)
         {
-            backgroundMusic.Stop(); // Останавливаем текущую музыку
+            backgroundMusic.Stop();
             backgroundMusic.clip = newMusic;
-            backgroundMusic.Play(); // Включаем новую музыку
+            backgroundMusic.Play();
         }
 
-        // Двигаем выходные двери
+        MoveExitDoors();
+    }
+
+    private void MoveExitDoors()
+    {
         GameObject exit1 = GameObject.FindWithTag("Exit1");
         GameObject exit2 = GameObject.FindWithTag("Exit2");
 
@@ -67,23 +76,35 @@ public class GeneratorLogic : MonoBehaviour
         {
             exit1.transform.position += new Vector3(0, 0, -1f);
         }
-
         if (exit2 != null)
         {
             exit2.transform.position += new Vector3(0, 0, 1f);
         }
     }
 
+    public void StopFlashing()
+    {
+        StopAllCoroutines();
+        if (flashImage != null)
+        {
+            flashImage.gameObject.SetActive(false);
+        }
+        isFlashing = false;
+    }
+
     private IEnumerator FlashScreen()
     {
         isFlashing = true;
-        flashImage.gameObject.SetActive(true);
-        while (true)
+        if (flashImage != null)
         {
-            flashImage.color = new Color(1, 1, 1, 1);
-            yield return new WaitForSeconds(flashSpeed);
-            flashImage.color = new Color(1, 1, 1, 0);
-            yield return new WaitForSeconds(flashSpeed);
+            flashImage.gameObject.SetActive(true);
+            while (true)
+            {
+                flashImage.color = new Color(1, 1, 1, 1);
+                yield return new WaitForSeconds(flashSpeed);
+                flashImage.color = new Color(1, 1, 1, 0);
+                yield return new WaitForSeconds(flashSpeed);
+            }
         }
     }
 }
