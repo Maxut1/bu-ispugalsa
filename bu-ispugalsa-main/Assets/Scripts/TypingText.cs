@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement; // ✅ Добавлено!
 using UnityEngine.UI;
 using YG; // Подключаем Yandex SDK
 
-
 public class TypingText : MonoBehaviour
 {
     public TextMeshProUGUI textMeshPro;
@@ -22,6 +21,7 @@ public class TypingText : MonoBehaviour
     public Button menuButton;
 
     private System.Action pendingAction; // Храним действие, которое нужно выполнить после рекламы
+    private bool isTyping = true; // Флаг, указывающий, печатается ли текст в данный момент
 
     void Start()
     {
@@ -47,20 +47,31 @@ public class TypingText : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (currentSentenceIndex < sentences.Length - 1)
+            if (isTyping)
             {
-                currentSentenceIndex++;
-                StartCoroutine(DisplayText());
+                // Если текст еще печатается, то завершаем его печать
+                StopAllCoroutines();
+                textMeshPro.text = sentences[currentSentenceIndex]; // Завершаем текст
+                isTyping = false; // Устанавливаем флаг, что текст больше не печатается
             }
             else
             {
-                if (winPanel != null)
+                // Если текст уже завершен, переходим к следующему предложению
+                if (currentSentenceIndex < sentences.Length - 1)
                 {
-                    ShowWinPanel();
+                    currentSentenceIndex++;
+                    StartCoroutine(DisplayText());
                 }
                 else
                 {
-                    SceneManager.LoadScene(Scene);
+                    if (winPanel != null)
+                    {
+                        ShowWinPanel();
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene(Scene);
+                    }
                 }
             }
         }
@@ -74,6 +85,7 @@ public class TypingText : MonoBehaviour
             yield break;
         }
 
+        isTyping = true; // Устанавливаем флаг, что текст печатается
         textMeshPro.text = "";
         string[] words = sentences[currentSentenceIndex].Split(' ');
 
@@ -94,6 +106,8 @@ public class TypingText : MonoBehaviour
 
             textMeshPro.text += " ";
         }
+
+        isTyping = false; // Устанавливаем флаг, что текст больше не печатается
     }
 
     void ShowWinPanel()
